@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Collecting data..."
 
 # Check directory
@@ -11,6 +12,7 @@ fi
 if [ ! -d "dataset" ]; then
 	mkdir dataset
 fi
+
 
 # Download each zip file
 CURR=$(pwd)
@@ -52,22 +54,20 @@ do
 		LCOUNT=1
 		while read LINE;
 		do
-			if [ "$LCOUNT" -gt "0" -a "$LCOUNT" -lt "7" ]; 
+			if [ "$LCOUNT" -lt "7" ]; 
 			then
 				VALUE=$(echo "$LINE" | awk -F\; '{print $NF}')
 				echo -n "$VALUE;" >> "$STATIONS"
-				sed -i "1d" "$FILE"
 			elif [ "$LCOUNT" -eq "7" ];
 			then
 				VALUE=$(echo "$LINE" | awk -F\; '{print $NF}')
 				echo -n "$VALUE" >> "$STATIONS"
-			elif [ "$LCOUNT" -eq "8" ]; 
+			elif [ "$LCOUNT" -gt "8" ];
 			then
-				sed -i "1d" "$FILE"
-			else
 				echo "" >> "$STATIONS"
 				break
 			fi
+			sed -i "1d" "$FILE"
 			LCOUNT=$(($LCOUNT + 1))
 		done < "$FILE"
 	done
@@ -77,3 +77,4 @@ echo "REGIAO;UF;MUNICIPIO;CODIGO;LATITUDE;LONGITUDE;ALTITUDE" > $STATIONS
 echo "$SORTED" >> $STATIONS
 
 # Join all csv into big table
+
