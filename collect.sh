@@ -87,7 +87,7 @@ do
 		if [ $HDSET -eq 0 ];
 		then
 			header_file=$(find $DATAPATH/2000/*.CSV | head -n1)
-			header=head -n1 $header_file
+			header=$(head -n1 $header_file)
 			"${header}ESTACAO;" > $OUTPUTFILE
 			HDSET=1
 		fi
