@@ -2,7 +2,7 @@
 echo "Collecting data..."
 
 # Check directory
-if [ $1 == "-d" ]; then
+if [ "$1" == "-d" ]; then
 	rm -rf dataset
 	rm -rf raw
 fi
@@ -43,17 +43,28 @@ done
 
 # Trim the header of the files and store into stations csv
 STATIONS="$DATAPATH/STATION_DATA.CSV"
+OUTPUTFILE="$DATAPATH/INMET_DATA.CSV"
 echo "CAMINHO PARA STATIONS DATA $STATIONS"
+echo "PATH TO CONCATENATED DATA $OUTPUT"
+HDSET=0
 for YEAR in {2000..2022}
 do
 	if [ ! -f $STATIONS ]; then
 		touch $STATIONS
 	fi
 
+	FILECOUNT=$(ls $DATAPATH/$YEAR/*.CSV | wc -l)
+	POS=0
+	LOD="|"
 	for FILE in $DATAPATH/$YEAR/*.CSV
 	do
-		echo "READING FILE: $FILE"
 		LCOUNT=1
+		echo -ne "LOADING $YEAR [$POS/$FILECOUNT] $LOD \r"
+		if [ "$LOD" == "|" ]; then LOD="/" 
+		elif [ "$LOD" == "/" ]; then LOD="-"
+		elif [ "$LOD" == "-" ]; then LOD="\\"
+		elif [ "$LOD" == "\\" ]; then LOD="|"
+		fi
 		while read LINE;
 		do
 			if [ "$LCOUNT" -lt "7" ]; 
@@ -72,7 +83,16 @@ do
 			sed -i "1d" "$FILE"
 			LCOUNT=$(($LCOUNT + 1))
 		done < "$FILE"
+		if [ $HDSET -eq 0 ];
+		then
+			header_file=$(find $DATAPATH/2000/*.CSV | head -n1)
+			head -n1 $header_file > $OUTPUTFILE
+			HDSET=1
+		fi
+		sed "1d" "$FILE" >> $OUTPUTFILE
+		POS=$(($POS+1))
 	done
+	echo "LOADING $YEAR [$POS/$FILECOUNT] ok!"
 done
 SORTED=$(sort -u $STATIONS)
 echo "REGIAO;UF;MUNICIPIO;CODIGO;LATITUDE;LONGITUDE;ALTITUDE" > $STATIONS
@@ -80,16 +100,4 @@ echo "$SORTED" >> $STATIONS
 
 # Join all csv into big table
 # Create an empty output file with the header row
-output_file=$DATAPATH/INMET_DATA.CSV
-header_file=$(find $DATAPATH/2000/*.CSV | head -n1)
-head -n1 $header_file > $output_file
 
-# Loop over each year from 2000 to 2022
-for year in {2000..2022}; do
-    # Merge all .csv files in the current year's directory
-    csv_files=$(ls $DATAPATH/$year/*.CSV)
-    for csv_file in $csv_files; do
-        # Remove the header row from the current .csv file
-        sed 1d $csv_file >> $output_file
-    done
-done
