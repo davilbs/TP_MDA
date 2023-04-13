@@ -16,13 +16,15 @@ fi
 
 # Download each zip file
 CURR=$(pwd)
+RAWPATH="$CURR/raw"
+DATAPATH="$CURR/dataset"
 LINK="https://portal.inmet.gov.br/uploads/dadoshistoricos"
 for YEAR in {2000..2022}
 do
 	FILE="$YEAR.zip"
-	if [ ! -f "$CURR/raw/$FILE" ]; then
+	if [ ! -f "$RAWPATH/$FILE" ]; then
 		echo "Downloading ... $FILE"
-		wget -P "$CURR/raw" "$LINK/$FILE"
+		wget -P $RAWPATH "$LINK/$FILE"
 	fi
 done
 
@@ -32,15 +34,15 @@ do
 	FILE="$YEAR.zip"
 	echo "Unzipping ... $FILE"
 	if [ "$YEAR" -lt "2020" ]; then
-		unzip -n -q "$CURR/raw/$FILE" -d "$CURR/dataset/"
+		unzip -n -q "$RAWPATH/$FILE" -d "$DATAPATH"
 	else
-		unzip -n -q "$CURR/raw/$FILE" -d "$CURR/dataset/$YEAR"
+		unzip -n -q "$RAWPATH/$FILE" -d "$DATAPATH/$YEAR"
 	fi
 	
 done
 
 # Trim the header of the files and store into stations csv
-STATIONS="$CURR/dataset/STATION_DATA.CSV"
+STATIONS="$DATAPATH/STATION_DATA.CSV"
 echo "CAMINHO PARA STATIONS DATA $STATIONS"
 for YEAR in {2000..2022}
 do
@@ -48,7 +50,7 @@ do
 		touch $STATIONS
 	fi
 
-	for FILE in $CURR/dataset/$YEAR/*.CSV
+	for FILE in $DATAPATH/$YEAR/*.CSV
 	do
 		echo "READING FILE: $FILE"
 		LCOUNT=1
@@ -77,4 +79,17 @@ echo "REGIAO;UF;MUNICIPIO;CODIGO;LATITUDE;LONGITUDE;ALTITUDE" > $STATIONS
 echo "$SORTED" >> $STATIONS
 
 # Join all csv into big table
+# Create an empty output file with the header row
+output_file=$DATAPATH/INMET_DATA.CSV
+header_file=$(find $DATAPATH/2000/*.CSV | head -n1)
+head -n1 $header_file > $output_file
 
+# Loop over each year from 2000 to 2022
+for year in {2000..2022}; do
+    # Merge all .csv files in the current year's directory
+    csv_files=$(ls $DATAPATH/$year/*.CSV)
+    for csv_file in $csv_files; do
+        # Remove the header row from the current .csv file
+        sed 1d $csv_file >> $output_file
+    done
+done
