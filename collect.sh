@@ -58,6 +58,7 @@ do
 	LOD="|"
 	for FILE in $DATAPATH/$YEAR/*.CSV
 	do
+		STATION=$(echo $FILE | awk -F/ '{print $NF}' | awk -F_ '{printf $4}')
 		LCOUNT=1
 		echo -ne "LOADING $YEAR [$POS/$FILECOUNT] $LOD \r"
 		if [ "$LOD" == "|" ]; then LOD="/" 
@@ -86,10 +87,11 @@ do
 		if [ $HDSET -eq 0 ];
 		then
 			header_file=$(find $DATAPATH/2000/*.CSV | head -n1)
-			head -n1 $header_file > $OUTPUTFILE
+			header=head -n1 $header_file
+			"${header}ESTACAO;" > $OUTPUTFILE
 			HDSET=1
 		fi
-		sed "1d" "$FILE" >> $OUTPUTFILE
+		sed "1d" "$FILE" | sed -e "s/$/${STATION};/" >> $OUTPUTFILE
 		POS=$(($POS+1))
 	done
 	echo "LOADING $YEAR [$POS/$FILECOUNT] ok!"
