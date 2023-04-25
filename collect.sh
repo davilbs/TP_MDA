@@ -4,7 +4,6 @@ echo "Collecting data..."
 # Check directory
 if [ "$1" == "-d" ]; then
 	rm -rf dataset
-	rm -rf raw
 fi
 if [ ! -d "raw" ]; then
 	mkdir raw
@@ -96,10 +95,9 @@ do
 	done
 	echo "LOADING $YEAR [$POS/$FILECOUNT] ok!"
 done
-SORTED=$(sort -u $STATIONS)
+SORTED=$(sort -u -t';' -k 1,1 -k 2,2 -k 3,3  $STATIONS)
 echo "REGIAO;UF;MUNICIPIO;CODIGO;LATITUDE;LONGITUDE;ALTITUDE" > $STATIONS
 echo "$SORTED" >> $STATIONS
 
-# Join all csv into big table
-# Create an empty output file with the header row
-
+# Remove invalid rows
+sed -e "/\(9999;\)\1\{1,\}/d" $OUTPUTFILE
