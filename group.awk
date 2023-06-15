@@ -27,10 +27,11 @@ function print_daily_result(day, station, precipit_tot, press_tot, radia_tot, te
 	umidade_med = umidade_tot / num_medicoes;
 	vento_raj_med = vento_raj_max_tot / num_medicoes;
 	vento_vel_med = vento_vel_tot / num_medicoes;
-	date_sep = index("-", day) == 0 ? "-" : "/";
+	index(day, "-") ? date_sep="-" : date_sep="/";
 	split(day, array_dia, date_sep);
+	correct_day = array_dia[3]"/"array_dia[2]"/"array_dia[1];
 	beaufort_scale = get_beaufort_scale_num(vento_raj_med);
-	print array_dia[1], array_dia[2], array_dia[3], station, precipit_tot, press_med, radia_med, temp_b_seco_med, temp_p_orv_med, umidade_med, vento_raj_med, vento_vel_med, beaufort_scale;
+	print correct_day, station, precipit_tot, press_med, radia_med, temp_b_seco_med, temp_p_orv_med, umidade_med, vento_raj_med, vento_vel_med, beaufort_scale;
 }
 
 function return_zero_if_invalid(value){
