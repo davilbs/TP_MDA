@@ -63,8 +63,9 @@ NR > 1 {
 					exit;
 				}
 			}
+
 			print_daily_result(curr_day, curr_station, precipitacao_soma, pressao_soma, radiacao_soma,
-					   temp_ar_bulb_seco, temp_p_orv_soma, umidade_soma, vento_raj_max_soma,
+					   temp_ar_bulb_seco_soma, temp_p_orv_soma, umidade_soma, vento_raj_max_soma,
 					   vento_vel_soma, num_medicoes_dia)
 			#Resets data
 			precipitacao_soma = 0;
