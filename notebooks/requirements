@@ -3,4 +3,4 @@ jupyterlab
 ipykernel
 numpy
 seaborn
-
+scikit-learn
