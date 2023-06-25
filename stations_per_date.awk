@@ -3,7 +3,7 @@ function print_group(group_name, stations){
    print group_name": "stations
 }
 
-($3"/"$2"/"$1 != group_name) && ($5 > 0){
+ ($3"/"$2"/"$1 != group_name) && ($5 > 0){
     if (group != "")
         print_group(group_name, group)
 
