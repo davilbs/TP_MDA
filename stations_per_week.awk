@@ -2,7 +2,7 @@
 function print_group(group_name, stations){
    group = "";
    for (station in stations){
-        if (stations[station] > 0){
+        if (stations[station] > 10){
             if (group == ""){
                group = station;
             }else{
@@ -50,7 +50,7 @@ BEGIN {
 }
 
 #Change group or not
-((group_name == "") || (date_diff($3"/"$2"/"$1, group_name) > 7)) && ($5 > 0){
+($1 >= 2008) && ((group_name == "") || (date_diff($3"/"$2"/"$1, group_name) > 7)) && ($5 > 0){
     if (alen(stations_on_week) > 0)
         print_group(group_name, stations_on_week)
 
@@ -59,7 +59,7 @@ BEGIN {
 }
 
 #Either way, save station rain
-$5 > 0 {
+($1 >= 2008) && $5 > 0 {
     stations_on_week[$4] += $5 
     #group = (group == "" ? $4 : group OFS $4)
 }
