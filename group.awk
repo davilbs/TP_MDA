@@ -34,7 +34,7 @@ function print_daily_result(day, station, precipit_tot, press_tot, radia_tot, te
 }
 
 function return_zero_if_invalid(value){
-	if (value == -9999 || value == "null") return 0
+	if (value == -9999 || value == "null") return -9999
 	else return value	
 }
 
