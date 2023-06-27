@@ -1,2 +1,7 @@
 dataset/*
 raw/*
+!dataset/STATION_DATA.CSV
+!dataset/RAIN_STATIONS_PER_WEEKS.txt
+!dataset/RAIN_STATIONS_PER_DATE.txt
+!dataset/PRECIPT_PER_DATE.csv
+!dataset/itemsets_weeks
