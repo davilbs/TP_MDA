@@ -45,28 +45,30 @@ NR > 1 {
 		      "Rajada Vento escala Beaufort";
 		while (1) {
 			curr_day = $1; curr_station = $(NF-1);
-			while ($1 == curr_day && $(NF-1) == curr_station){
-				precipitacao_soma += return_zero_if_invalid($3);
-				num_medicoes_dia++;
-				pressao_soma += return_zero_if_invalid($4);
-				radiacao_soma += return_zero_if_invalid($7);
-				temp_ar_bulb_seco_soma += return_zero_if_invalid($8);
-				temp_p_orv_soma += return_zero_if_invalid($9);
-				umidade_soma += return_zero_if_invalid($16);
-				vento_raj_max_soma += return_zero_if_invalid($18);
-				vento_vel_soma += return_zero_if_invalid($19);
-				if (getline == 0){
-					print_daily_result(curr_day, curr_station, precipitacao_soma, pressao_soma,
-							      radiacao_soma, temp_ar_bulb_seco_soma, temp_p_orv_soma,
-							      umidade_soma, vento_raj_max_soma, vento_vel_soma, 
-							      num_medicoes_dia)
-					exit;
+			if curr_station != "C891"{
+				while ($1 == curr_day && $(NF-1) == curr_station){
+					precipitacao_soma += return_zero_if_invalid($3);
+					num_medicoes_dia++;
+					pressao_soma += return_zero_if_invalid($4);
+					radiacao_soma += return_zero_if_invalid($7);
+					temp_ar_bulb_seco_soma += return_zero_if_invalid($8);
+					temp_p_orv_soma += return_zero_if_invalid($9);
+					umidade_soma += return_zero_if_invalid($16);
+					vento_raj_max_soma += return_zero_if_invalid($18);
+					vento_vel_soma += return_zero_if_invalid($19);
+					if (getline == 0){
+						print_daily_result(curr_day, curr_station, precipitacao_soma, pressao_soma,
+									radiacao_soma, temp_ar_bulb_seco_soma, temp_p_orv_soma,
+									umidade_soma, vento_raj_max_soma, vento_vel_soma, 
+									num_medicoes_dia)
+						exit;
+					}
 				}
-			}
 
-			print_daily_result(curr_day, curr_station, precipitacao_soma, pressao_soma, radiacao_soma,
-					   temp_ar_bulb_seco_soma, temp_p_orv_soma, umidade_soma, vento_raj_max_soma,
-					   vento_vel_soma, num_medicoes_dia)
+				print_daily_result(curr_day, curr_station, precipitacao_soma, pressao_soma, radiacao_soma,
+						temp_ar_bulb_seco_soma, temp_p_orv_soma, umidade_soma, vento_raj_max_soma,
+						vento_vel_soma, num_medicoes_dia)
+			}
 			#Resets data
 			precipitacao_soma = 0;
 			pressao_soma = 0;
