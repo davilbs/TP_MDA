@@ -2,6 +2,7 @@ dataset/*
 raw/*
 notebooks/venv
 notebooks/.ipynb_checkpoints
+notebooks/assets/.ipynb_checkpoints
 !dataset/STATION_DATA.CSV
 !dataset/RAIN_STATIONS_PER_WEEKS.txt
 !dataset/RAIN_STATIONS_PER_DATE.txt
