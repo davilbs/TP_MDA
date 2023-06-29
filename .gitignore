@@ -8,3 +8,4 @@ notebooks/assets/.ipynb_checkpoints
 !dataset/RAIN_STATIONS_PER_DATE.txt
 !dataset/PRECIPT_PER_DATE.csv
 !dataset/itemsets_weeks
+!dataset/meds_per_year.csv
